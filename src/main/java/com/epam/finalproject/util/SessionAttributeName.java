@@ -7,6 +7,7 @@ public class SessionAttributeName {
     public static final String ERROR_SET = "errorSet";
     public static final String LOGIN_MAP = "loginMap";
     public static final String REGISTRATION_MAP = "regMap";
+    public static final String CURRENT_PAGE = "currentPage";
 
     private SessionAttributeName() { }
 }

@@ -1,41 +1,46 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
-<div class="card col-5 offset-2">
-    <h5 class="card-header">Вход</h5>
-    <div class="card-body">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <form method="post" action="${pageContext.request.contextPath}/user">
-                    <div class="form-row">
-                        <label for="login" class="col-3">Логин</label>
-                        <div class="col-9">
-                            <input type="text" class="form-control" id="login" pattern="^[a-zA-Zа-яА-Я][a-zA-Zа-яА-Я0-9-_\.]{1,20}$"
-                                   name="login" required style="margin-bottom: 10px">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <label for="pass" class="col-3">Пароль</label>
-                        <div class="col-9">
-                            <input type="password" class="form-control" id="pass"
-                                   pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$"
-                                   name="pass" required>
-                        </div>
-                    </div>
-                    <br>
-                    <input type="hidden" name="action" value="LOGIN">
-                    <button class="btn btn-primary col-5 offset-4" type="submit">Войти</button>
-                    <br>
-                </form>
-                <form class="form-inline my-2 my-lg-0">
-                    <button class="btn btn-primary col-5 offset-4" type="submit" formmethod="GET"
-                            formaction="${pageContext.request.contextPath}/user" name="action" value="REGISTRATION_FORM">
-                        Зарегистрироваться
-                    </button>
-                </form>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setLocale value="${language}"/>
+<fmt:setBundle basename="property.pagecontent"/>
+<html>
+<head>
+    <c:import url="fragment/bootstrap_style.jsp"/>
+    <c:import url="fragment/bootstrap_script.jsp"/>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/singInAndSignUp.css">
+    <title>sign in</title>
+</head>
+<body>
+<c:import url="section/header.jsp"/>
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <form action="${pageContext.request.contextPath}/mainController" method="post">
+            <input type="hidden" name="command" value="login">
+            <input type="text" id="email" class="fadeIn second" name="login" placeholder="Login" required>
+            <input type="password" id="password" class="fadeIn third" name="password" placeholder="<fmt:message key="placeholder.password"/>" required>
+            <input type="submit" class="fadeIn fourth"  name="command" value="<fmt:message key="login.signIn"></input>">
+        </form>
+        <c:if test="${errorUserMessageIsValid}">
+            <div class="alert alert-danger" role="alert">
+                <fmt:message key="login.emailAndPasswordIsValid"/>
             </div>
+        </c:if>
+        <c:if test="${errorUserMessageIsNotExist}">
+            <div class="alert alert-danger" role="alert">
+                <fmt:message key="login.incorrectLoginPassword"/>
+            </div>
+        </c:if>
+
+        <div id="formFooter">
+            <form action="${pageContext.request.contextPath}/mainController" method="get">
+                <input type="hidden" name="command" value="register">
+                <input type="submit" value="<fmt:message key="login.signUp"/>">
+            </form>
         </div>
     </div>
 </div>
-
-
+</body>
+</html>
