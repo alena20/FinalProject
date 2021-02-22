@@ -21,6 +21,9 @@
         <location>/error/error_404.jsp</location>
     </error-page>
 
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 
     <context-param>
         <param-name>uploadSrc</param-name>

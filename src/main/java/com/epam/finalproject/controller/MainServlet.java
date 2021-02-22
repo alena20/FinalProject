@@ -4,12 +4,14 @@ import com.epam.finalproject.command.CommandResult;
 import com.epam.finalproject.command.PagePath;
 import com.epam.finalproject.connection.impl.ConnectionPool;
 import com.epam.finalproject.command.ActionCommand;
+import com.epam.finalproject.util.ContextParameterName;
 import com.epam.finalproject.util.RequestParameterName;
 import com.epam.finalproject.util.SessionAttributeName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -67,6 +69,40 @@ public class MainServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        loadImages();
+    }
+
+    private void loadImages() {
+        ServletContext context = getServletContext();
+        String srcValue = context.getInitParameter(ContextParameterName.UPLOAD_SOURCE);
+        String destValue = context.getInitParameter(ContextParameterName.UPLOAD_DESTINATION);
+        File src = new File(srcValue);
+        File dest = new File(context.getRealPath(destValue));
+        if (!src.exists()) {
+            src.mkdir();
+        }
+        if (!dest.exists()) {
+            dest.mkdir();
+        }
+        String[] files = src.list();
+        for (String file : files) {
+            File srcFile = new File(src, file);
+            File destFile = new File(dest, file);
+            copyFile(srcFile, destFile);
+        }
+    }
+
+    private void copyFile(File srcFile, File destFile) {
+        try (InputStream in = new FileInputStream(srcFile);
+             OutputStream out = new FileOutputStream(destFile)) {
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int length;
+            while ((length = in.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
+            }
+        } catch (IOException e) {
+            LOGGER.error("File {} was not loaded!", srcFile.getName(), e);
+        }
     }
 
     @Override

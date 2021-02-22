@@ -1,7 +1,8 @@
-<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.user.account.locale.postfix}" scope="session"/>
+<fmt:setLocale value="${sessionScope.user.account.locale.postfix}"
+               scope="session"/>
 <fmt:setBundle basename="property.pagecontent"/>
 
 <header class="header-section">
@@ -15,8 +16,9 @@
             <nav class="mainmenu mobile-menu">
                 <ul>
                     <li class="active">
-                        <a href="${pageContext.request.contextPath}/mainController?command=open_home">
-                            <jsp:forward page="/pages/home.jsp"></jsp:forward>
+                       <a href="${pageContext.request.contextPath}/mainController?command=open_home">
+                           <%-- <jsp:forward page="/pages/home.jsp"></jsp:forward>--%>
+                           <fmt:message key="header.home"/>
                         </a>
                     </li>
                     <li>
@@ -29,6 +31,17 @@
                             <fmt:message key="header.contacts"/>
                         </a>
                     </li>
+                    <li>
+                        <a id="russianLanguage" href="${pageContext.request.contextPath}/mainController?command=change_language&language=ru">ru
+
+                        </a>
+                    </li>
+                    <li>
+                        <a id="englishLanguage" href="${pageContext.request.contextPath}/mainController?command=change_language&language=en">en
+
+                        </a>
+                    </li>
+<%--
                     <c:choose>
                         <c:when test="${sessionScope.user!=null}">
                             <li>
@@ -53,14 +66,15 @@
                             </li>
                         </c:otherwise>
                     </c:choose>
+--%>
                 </ul>
             </nav>
         </div>
         <div id="mobile-menu-wrap"></div>
     </div>
-</header>--%>
+</header>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <fmt:setLocale value="${language}"/>
@@ -88,5 +102,5 @@
             </ul>
         </li>
     </ul>
-</header>
+</header>--%>
 

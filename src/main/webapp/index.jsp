@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<jsp:forward page="/pages/modal/login.jsp"></jsp:forward>
+<jsp:forward page="mainController?command=open_home"></jsp:forward>
 </body>
 
 </html>
