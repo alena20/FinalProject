@@ -41,7 +41,7 @@
 
                         </a>
                     </li>
-<%--
+
                     <c:choose>
                         <c:when test="${sessionScope.user!=null}">
                             <li>
@@ -66,7 +66,6 @@
                             </li>
                         </c:otherwise>
                     </c:choose>
---%>
                 </ul>
             </nav>
         </div>

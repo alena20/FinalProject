@@ -23,7 +23,7 @@ public interface UserDao  extends AbstractDao {
 
     boolean updateAccountData(int userId, String email, String locale, String password) throws DaoException;
 
-    boolean updatePersonalData(int userId, String firstName, String lastName, String phone, String instagram) throws DaoException;
+    boolean updatePersonalData(int userId, String firstName, String lastName, String phone) throws DaoException;
 
     List<User> findRecentUsers(int days) throws DaoException;
 

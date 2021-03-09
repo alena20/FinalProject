@@ -8,9 +8,12 @@ public enum CommandType {
     LOGIN(new LoginCommand()),
     LOGOUT(new LogoutCommand()),
     OPEN_HOME(new OpenHomeCommand()),
+    OPEN_CONTACTS(new OpenContactsCommand()),
     OPEN_PERSONAL_ACCOUNT(new OpenPersonalAccountCommand()),
     OPEN_ADMIN_MAIN(new OpenAdminMainCommand()),
-    REGISTER(new RegisterCommand());
+    OPEN_ADMIN_REGISTRATIONS(new OpenAdminRegistrationsCommand()),
+    REGISTER(new RegisterCommand()),
+    CHANGE_ADMIN_LOCALE(new ChangeAdminLocaleCommand());
 
     private final ActionCommand command;
 

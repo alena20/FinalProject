@@ -7,6 +7,7 @@ import com.epam.finalproject.util.SessionAttributeName;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
 
 public class ChangeLanguageCommand  implements ActionCommand {
     private static final String RU = "ru";

@@ -19,6 +19,7 @@ public class RequestParameterName {
     public static final String DESCRIPTION = "description";
     public static final String NEW_PASSWORD = "newPassword";
     public static final String REPEAT_NEW_PASSWORD = "repeatNewPassword";
+    public static final String RECENT_DAYS = "days";
 
     private RequestParameterName() {
     }

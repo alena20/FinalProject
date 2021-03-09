@@ -11,10 +11,7 @@ import com.epam.finalproject.model.entity.User;
 import com.epam.finalproject.service.UserService;
 import com.epam.finalproject.util.CryptoUtility;
 import com.epam.finalproject.util.RequestParameterName;
-import com.epam.finalproject.validator.AbstractValidator;
-import com.epam.finalproject.validator.UserValidator;
-import com.epam.finalproject.validator.ValidationError;
-import com.epam.finalproject.validator.ValidationErrorSet;
+import com.epam.finalproject.validator.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -157,7 +154,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean blockUser(String userId) throws ServiceException {
-        return false;
+        if (!CommonValidator.correctId(userId)) {
+            return false;
+        }
+        int id = Integer.parseInt(userId);
+        try {
+            return dao.blockUser(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
