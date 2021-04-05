@@ -1,6 +1,6 @@
 package com.epam.finalproject.model.entity;
 
-import com.epam.finalproject.model.creator.AccountCreator;
+import com.epam.finalproject.model.builder.AccountBuilder;
 
 import java.sql.Date;
 
@@ -13,7 +13,7 @@ public class Trainer extends User {
 
     //new Trainer
     public Trainer() {
-        account = AccountCreator.anAccount().build();
+        account = AccountBuilder.anAccount().build();
         account.setRole(UserRole.TRAINER);
     }
 

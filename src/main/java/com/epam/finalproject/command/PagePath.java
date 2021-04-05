@@ -9,7 +9,10 @@ public enum PagePath {
     PERSONAL_DATA("/pages/personal_data.jsp", "/mainController?command=open_personal_data"),
     CONTACTS("/pages/contacts.jsp", "/mainController?command=open_contacts"),
     ADMIN_REGISTRATIONS("/pages/admin_registrations.jsp", "/mainController?command=open_admin_registrations"),
-    ADMIN_MAIN("/pages/admin_main.jsp", "/mainController?command=open_admin_main");
+    ADMIN_MAIN("/pages/admin_main.jsp", "/mainController?command=open_admin_main"),
+    ADMIN_FEEDBACKS("/pages/admin_feedbacks.jsp", "/mainController?command=open_admin_feedbacks"),
+    PERSONAL_FINANCE("/pages/personal_finance.jsp", "/mainController?command=open_personal_finance"),
+    SCHEDULE("/pages/schedule.jsp", "/mainController?command=open_schedule");
 
     private final String directUrl;
     private final String servletPath;

@@ -16,11 +16,9 @@ public interface UserService {
 
     boolean confirmAccount(String accountId) throws ServiceException;
 
-    boolean updateAccountData(User user, String email, String locale, String newPassword, String repeatPassword)
-            throws ServiceException;
+    boolean updateAccountData(User user, String email, String locale, String newPassword, String repeatPassword) throws ServiceException;
 
-    boolean updatePersonalData(int userId, String firstName, String lastName, String phone, String instagram)
-            throws ServiceException;
+    boolean updatePersonalData(int userId, String firstName, String lastName, String phone) throws ServiceException;
 
     List<User> findRecentUsers(String daysNumber) throws ServiceException;
 

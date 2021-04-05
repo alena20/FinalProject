@@ -1,5 +1,6 @@
 package com.epam.finalproject.dao.impl;
 
+import com.epam.finalproject.exception.DaoException;
 import com.epam.finalproject.model.entity.UserRole;
 
 import java.sql.Connection;
@@ -69,12 +70,14 @@ public class UserStatement {
             "UPDATE users SET short_summary=? WHERE user_id=?";
     private static final String SQL_SELECT_PASSWORD =
             "SELECT password FROM accounts WHERE account_id=?";
+    private static final String SQL_UPDATE_TRAINER =
+            "UPDATE users SET institution=?, graduation=? WHERE  user_id=?;";
+    private static final String SQL_UPDATE_TRAINER_ROLE =
+            "UPDATE accounts SET role='TRAINER' WHERE account_id=?;";
 
     private UserStatement() {}
-    static PreparedStatement statementInsertAccount(Connection connection, String login, String password,
-                                                    String email) throws SQLException {
-        PreparedStatement statement =
-                connection.prepareStatement(SQL_INSERT_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
+    static PreparedStatement statementInsertAccount(Connection connection, String login, String password, String email) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SQL_INSERT_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, login);
         statement.setString(2, password);
         statement.setString(3, email);
@@ -83,54 +86,44 @@ public class UserStatement {
     }
 
     static PreparedStatement statementInsertUser(Connection connection, int accountId) throws SQLException {
-        PreparedStatement statement =
-                connection.prepareStatement(SQL_INSERT_USER);
+        PreparedStatement statement = connection.prepareStatement(SQL_INSERT_USER);
         statement.setInt(1, accountId);
         return statement;
     }
 
-    static PreparedStatement statementSelectUser(Connection connection, String login, String password)
-            throws SQLException {
-        PreparedStatement statement =
-                connection.prepareStatement(SQL_SELECT_USER);
+    static PreparedStatement statementSelectUser(Connection connection, String login, String password) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER);
         statement.setString(1, login);
         statement.setString(2, password);
         return statement;
     }
 
     static PreparedStatement statementSelectUserById(Connection connection, int id) throws SQLException {
-        PreparedStatement statement =
-                connection.prepareStatement(SQL_SELECT_USER_BY_ID);
+        PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_ID);
         statement.setInt(1, id);
         return statement;
     }
 
-    static PreparedStatement statementSelectByEmail(Connection connection,String email)
-            throws SQLException {
-        PreparedStatement statement =
-                connection.prepareStatement(SQL_SELECT_BY_EMAIL);
+    static PreparedStatement statementSelectByEmail(Connection connection,String email) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SQL_SELECT_BY_EMAIL);
         statement.setString(1, email);
         return statement;
     }
 
-    static PreparedStatement statementSelectByLogin(Connection connection, String login)
-            throws SQLException {
+    static PreparedStatement statementSelectByLogin(Connection connection, String login) throws SQLException {
         PreparedStatement statement =
                 connection.prepareStatement(SQL_SELECT_BY_LOGIN);
         statement.setString(1, login);
         return statement;
     }
 
-    static PreparedStatement statementUpdateActive(Connection connection, int id)
-            throws SQLException {
-        PreparedStatement statement =
-                connection.prepareStatement(SQL_UPDATE_ACTIVE);
+    static PreparedStatement statementUpdateActive(Connection connection, int id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ACTIVE);
         statement.setInt(1, id);
         return statement;
     }
 
-    static PreparedStatement statementUpdateAccount(Connection connection,String email, String locale, String password, int id)
-            throws SQLException {
+    static PreparedStatement statementUpdateAccount(Connection connection,String email, String locale, String password, int id) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ACCOUNT);
         statement.setString(1, email);
         statement.setString(2, locale);
@@ -139,13 +132,12 @@ public class UserStatement {
         return statement;
     }
 
-    static PreparedStatement statementUpdateUser(Connection connection, String firstName, String lastName, String phone, int id)
-            throws SQLException {
+    static PreparedStatement statementUpdateUser(Connection connection, String firstName, String lastName, String phone, int id) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER);
         statement.setString(1, firstName);
         statement.setString(2, lastName);
         statement.setString(3, phone);
-        statement.setInt(5, id);
+        statement.setInt(4, id);
         return statement;
     }
 
@@ -162,16 +154,14 @@ public class UserStatement {
         return statement;
     }
 
-    static PreparedStatement statementDecreaseBalance(Connection connection, int userId, double decreaseBalance)
-            throws SQLException {
+    static PreparedStatement statementDecreaseBalance(Connection connection, int userId, double decreaseBalance) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(SQL_DECREASE_BALANCE);
         statement.setDouble(1, decreaseBalance);
         statement.setInt(2, userId);
         return statement;
     }
 
-    static PreparedStatement statementIncreaseTrainings(Connection connection, int userId, int boughtTrainings)
-            throws SQLException {
+    static PreparedStatement statementIncreaseTrainings(Connection connection, int userId, int boughtTrainings) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(SQL_INCREASE_TRAININGS);
         statement.setInt(1, boughtTrainings);
         statement.setInt(2, userId);
@@ -182,8 +172,7 @@ public class UserStatement {
         return connection.prepareStatement(SQL_SELECT_ALL_TRAINERS);
     }
 
-    static PreparedStatement statementUpdateBalance(Connection connection, int userId, int amount)
-            throws SQLException {
+    static PreparedStatement statementUpdateBalance(Connection connection, int userId, int amount) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_BALANCE);
         statement.setInt(1, amount);
         statement.setInt(2, userId);
@@ -208,27 +197,36 @@ public class UserStatement {
         return statement;
     }
 
-    static PreparedStatement statementUpdateDiscount(Connection connection, int id, double discount)
-            throws SQLException {
+    static PreparedStatement statementUpdateDiscount(Connection connection, int id, double discount) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_DISCOUNT);
         statement.setDouble(1, discount);
         statement.setInt(2, id);
         return statement;
     }
 
-    static PreparedStatement statementUpdateDescription(Connection connection, int id, String shortSummary)
-            throws SQLException {
+    static PreparedStatement statementUpdateDescription(Connection connection, int id, String shortSummary) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_DESCRIPTION);
         statement.setString(1, shortSummary);
         statement.setInt(2, id);
         return statement;
     }
 
-    static PreparedStatement statementSelectPassword(Connection connection,
-                                                     int id)
-            throws SQLException {
-        PreparedStatement statement =
-                connection.prepareStatement(SQL_SELECT_PASSWORD);
+    static PreparedStatement statementSelectPassword(Connection connection, int id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SQL_SELECT_PASSWORD);
+        statement.setInt(1, id);
+        return statement;
+    }
+
+    static PreparedStatement statementUpdateTrainer(Connection connection,String institution,int graduation, int id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_TRAINER);
+        statement.setString(1, institution);
+        statement.setInt(2, graduation);
+        statement.setInt(3, id);
+        return statement;
+    }
+
+    static PreparedStatement statementUpdateTrainerRole(Connection connection, int id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_TRAINER_ROLE);
         statement.setInt(1, id);
         return statement;
     }

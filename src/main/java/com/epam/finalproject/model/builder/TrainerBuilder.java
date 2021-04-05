@@ -1,15 +1,15 @@
-package com.epam.finalproject.model.creator;
+package com.epam.finalproject.model.builder;
 
 import com.epam.finalproject.model.entity.Trainer;
 
-public final class TrainerCreator extends UserCreator<TrainerCreator> {
+public final class TrainerBuilder extends UserBuilder<TrainerBuilder> {
 
-    private TrainerCreator() {
+    private TrainerBuilder() {
         user = new Trainer();
     }
 
-    public static TrainerCreator aTrainer() {
-        return new TrainerCreator();
+    public static TrainerBuilder aTrainer() {
+        return new TrainerBuilder();
     }
 
     @Override
@@ -17,17 +17,17 @@ public final class TrainerCreator extends UserCreator<TrainerCreator> {
         return (Trainer) user;
     }
 
-    public TrainerCreator withInstitution(String institution) {
+    public TrainerBuilder withInstitution(String institution) {
         ((Trainer) user).setInstitution(institution);
         return this;
     }
 
-    public TrainerCreator withGraduationYear(int graduationYear) {
+    public TrainerBuilder withGraduationYear(int graduationYear) {
         ((Trainer) user).setGraduationYear(graduationYear);
         return this;
     }
 
-    public TrainerCreator withShortSummary(String shortSummary) {
+    public TrainerBuilder withShortSummary(String shortSummary) {
         ((Trainer) user).setShortSummary(shortSummary);
         return this;
     }
@@ -38,7 +38,7 @@ public final class TrainerCreator extends UserCreator<TrainerCreator> {
      * @param rating the rating
      * @return the trainer builder
      */
-    public TrainerCreator withRating(double rating) {
+    public TrainerBuilder withRating(double rating) {
         ((Trainer) user).setRating(rating);
         return this;
     }

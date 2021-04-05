@@ -8,7 +8,6 @@ public class CommonValidator {
     private static final String EMAIL_REGEX = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)" +
             "*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     private static final int MAX_EMAIL_LENGTH = 50;
-    private static final String INSTAGRAM_REGEX = "^(https://www.instagram.com/.{0,70})?$";
 
     public static boolean correctId(int id) {
         return id > 0;
@@ -24,8 +23,5 @@ public class CommonValidator {
 
     protected static boolean notNull(String... parameters) {
         return Arrays.stream(parameters).noneMatch(Objects::isNull);
-    }
-    protected static boolean correctInstagram(String instagram) {
-        return instagram != null && instagram.matches(INSTAGRAM_REGEX);
     }
 }

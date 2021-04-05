@@ -4,10 +4,7 @@ import com.epam.finalproject.dao.UserDao;
 import com.epam.finalproject.dao.impl.UserDaoImpl;
 import com.epam.finalproject.exception.DaoException;
 import com.epam.finalproject.exception.ServiceException;
-import com.epam.finalproject.model.entity.AccountLocale;
-import com.epam.finalproject.model.entity.Client;
-import com.epam.finalproject.model.entity.Trainer;
-import com.epam.finalproject.model.entity.User;
+import com.epam.finalproject.model.entity.*;
 import com.epam.finalproject.service.UserService;
 import com.epam.finalproject.util.CryptoUtility;
 import com.epam.finalproject.util.RequestParameterName;
@@ -24,6 +21,8 @@ public class UserServiceImpl implements UserService {
     private static final String BLANK = "";
     private static final UserServiceImpl INSTANCE = new UserServiceImpl();
     private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
+    private static final int DEFAULT_USERS_NUMBER = 30;
+    private static final double DEFAULT_TRAINING_COST = 20;
     private final UserDao dao = UserDaoImpl.getInstance();
 
     public static UserServiceImpl getInstance() {
@@ -118,38 +117,137 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateAccountData(User user, String email, String locale, String newPassword, String repeatPassword) throws ServiceException {
-        return false;
+    public boolean updateAccountData(User user, String email, String locale, String newPassword, String repeatPassword)
+            throws ServiceException {
+        if (!UserValidator.correctAccountDataParameters(email, locale, newPassword, repeatPassword)) {
+            return false;
+        }
+        try {
+            int id = dao.findIdByEmail(email);
+            if (id != 0 && id != user.getAccount().getId()) {
+                ValidationErrorSet errorSet = ValidationErrorSet.getInstance();
+                errorSet.add(ValidationError.CHANGE_EMAIL_EXISTS);
+                return false;
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        int userId = user.getAccount().getId();
+        locale = locale == null ? user.getAccount().getLocale().name() : locale.toUpperCase();
+        try {
+            String encrypted = newPassword.isEmpty()
+                    ? dao.findPassword(userId)
+                    : CryptoUtility.encryptMessage(newPassword);
+            boolean result = dao.updateAccountData(userId, email, locale, encrypted);
+            if (result) {
+                AccountLocale accountLocale = AccountLocale.valueOf(locale);
+                user.getAccount().setEmail(email);
+                user.getAccount().setLocale(accountLocale);
+            }
+            return result;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public boolean updatePersonalData(int userId, String firstName, String lastName, String phone, String instagram) throws ServiceException {
-        return false;
+    public boolean updatePersonalData(int userId, String firstName, String lastName, String phone)
+            throws ServiceException {
+        if (!UserValidator.correctPersonalDataParameters(userId, firstName, lastName, phone)) {
+            return false;
+        }
+        try {
+            return dao.updatePersonalData(userId, firstName, lastName, phone);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
     public List<User> findRecentUsers(String daysNumber) throws ServiceException {
-        return null;
+        if (!UserValidator.correctDaysNumber(daysNumber)) {
+            ValidationErrorSet errorSet = ValidationErrorSet.getInstance();
+            errorSet.add(ValidationError.INVALID_NUMBER_FORMAT);
+            return Collections.emptyList();
+        }
+        int days = daysNumber != null
+                ? Integer.parseInt(daysNumber)
+                : DEFAULT_USERS_NUMBER;
+        try {
+            return dao.findRecentUsers(days);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
     public boolean updateUserImage(int userId, String imageName) throws ServiceException {
-        return false;
+        if (!UserValidator.correctUpdateImageParameters(userId, imageName)) {
+            return false;
+        }
+        try {
+            return dao.updateUserImage(userId, imageName);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
     public boolean buyTrainings(Client client, String trainingsNumber) throws ServiceException {
-        return false;
+        ValidationErrorSet errorSet = ValidationErrorSet.getInstance();
+        if (!TrainingValidator.correctTrainingsNumber(trainingsNumber)) {
+            errorSet.add(ValidationError.INVALID_NUMBER_FORMAT);
+            return false;
+        }
+        int number = Integer.parseInt(trainingsNumber);
+        double discount = client.getPersonalDiscount();
+        double balance = client.getMoneyBalance();
+        double sum = number * DEFAULT_TRAINING_COST;
+        double absoluteDiscount = sum * discount / 100;
+        sum -= absoluteDiscount;
+        if (balance < sum) {
+            errorSet.add(ValidationError.LOW_BALANCE);
+            return false;
+        }
+        int id = client.getAccount().getId();
+        try {
+            boolean result = dao.updateBalanceAndBoughtTrainings(id, sum, number);
+            if (result) {
+                client.setBoughtTrainings(client.getBoughtTrainings() + number);
+                client.setMoneyBalance(client.getMoneyBalance() - sum);
+            }
+            return result;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
     public List<Trainer> findAllTrainers() throws ServiceException {
-        return null;
+        try {
+            return dao.findAllTrainers();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public boolean addToBalance(Client client, String amount) throws ServiceException {
-        return false;
+    public boolean addToBalance(Client client, String stringAmount) throws ServiceException {
+        if (!UserValidator.correctDepositAmount(stringAmount)) {
+            return false;
+        }
+        int id = client.getAccount().getId();
+        int amount = Integer.parseInt(stringAmount);
+        try {
+            boolean result = dao.addToBalance(id, amount);
+            if (result) {
+                double balance = client.getMoneyBalance();
+                client.setMoneyBalance(balance + amount);
+            }
+            return result;
+        } catch (DaoException e) {
+            throw new ServiceException();
+        }
     }
 
     @Override
@@ -167,17 +265,40 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean unblockUser(String userId) throws ServiceException {
-        return false;
+        if (!CommonValidator.correctId(userId)) {
+            return false;
+        }
+        int id = Integer.parseInt(userId);
+        try {
+            return dao.unblockUser(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public boolean updateDiscount(String clientId, String discount) throws ServiceException {
-        return false;
+    public boolean updateDiscount(String clientId, String personalDiscount) throws ServiceException {
+        if (!UserValidator.correctUpdateDiscountParameters(clientId, personalDiscount)) {
+            return false;
+        }
+        int id = Integer.parseInt(clientId);
+        double discount = Double.parseDouble(personalDiscount);
+        try {
+            return dao.updateDiscount(id, discount);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
     public boolean updateDescription(int trainerId, String description) throws ServiceException {
-        return false;
+        if (!UserValidator.correctUpdateSummaryParameters(trainerId, description)) {
+            return false;
+        }
+        try {
+            return dao.updateDescription(trainerId, description);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
-
 }

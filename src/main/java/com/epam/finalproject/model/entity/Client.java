@@ -1,6 +1,6 @@
 package com.epam.finalproject.model.entity;
 
-import com.epam.finalproject.model.creator.AccountCreator;
+import com.epam.finalproject.model.builder.AccountBuilder;
 
 public class Client extends User {
     private double moneyBalance;
@@ -8,7 +8,7 @@ public class Client extends User {
     private int boughtTrainings;
 
     public Client() {
-        account = AccountCreator.anAccount().build();
+        account = AccountBuilder.anAccount().build();
         account.setRole(UserRole.CLIENT);
     }
 

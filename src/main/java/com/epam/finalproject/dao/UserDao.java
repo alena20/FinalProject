@@ -29,8 +29,7 @@ public interface UserDao  extends AbstractDao {
 
     boolean updateUserImage(int userId, String imageName) throws DaoException;
 
-    boolean updateBalanceAndBoughtTrainings(int userId, double decreaseBalance, int increaseTrainings)
-            throws DaoException;
+    boolean updateBalanceAndBoughtTrainings(int userId, double decreaseBalance, int increaseTrainings) throws DaoException;
 
     List<Trainer> findAllTrainers() throws DaoException;
 

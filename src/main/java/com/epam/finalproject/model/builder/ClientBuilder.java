@@ -1,9 +1,9 @@
-package com.epam.finalproject.model.creator;
+package com.epam.finalproject.model.builder;
 
 import com.epam.finalproject.model.entity.Client;
 
-public final class ClientCreator extends UserCreator<ClientCreator> {
-    private ClientCreator() {
+public final class ClientBuilder extends UserBuilder<ClientBuilder> {
+    private ClientBuilder() {
         user = new Client();
     }
 
@@ -12,8 +12,8 @@ public final class ClientCreator extends UserCreator<ClientCreator> {
      *
      * @return the client builder
      */
-    public static ClientCreator aClient() {
-        return new ClientCreator();
+    public static ClientBuilder aClient() {
+        return new ClientBuilder();
     }
 
     @Override
@@ -27,7 +27,7 @@ public final class ClientCreator extends UserCreator<ClientCreator> {
      * @param moneyBalance the money balance
      * @return the client builder
      */
-    public ClientCreator withMoneyBalance(double moneyBalance) {
+    public ClientBuilder withMoneyBalance(double moneyBalance) {
         ((Client) user).setMoneyBalance(moneyBalance);
         return this;
     }
@@ -38,7 +38,7 @@ public final class ClientCreator extends UserCreator<ClientCreator> {
      * @param personalDiscount the personal discount
      * @return the client builder
      */
-    public ClientCreator withPersonalDiscount(double personalDiscount) {
+    public ClientBuilder withPersonalDiscount(double personalDiscount) {
         ((Client) user).setPersonalDiscount(personalDiscount);
         return this;
     }
@@ -49,7 +49,7 @@ public final class ClientCreator extends UserCreator<ClientCreator> {
      * @param boughtTrainings the bought trainings
      * @return the client builder
      */
-    public ClientCreator withBoughtTrainings(int boughtTrainings) {
+    public ClientBuilder withBoughtTrainings(int boughtTrainings) {
         ((Client) user).setBoughtTrainings(boughtTrainings);
         return this;
     }

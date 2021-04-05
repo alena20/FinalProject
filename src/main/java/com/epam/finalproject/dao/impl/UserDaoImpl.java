@@ -3,7 +3,7 @@ package com.epam.finalproject.dao.impl;
 import com.epam.finalproject.connection.impl.ConnectionPool;
 import com.epam.finalproject.dao.UserDao;
 import com.epam.finalproject.exception.DaoException;
-import com.epam.finalproject.model.creator.*;
+import com.epam.finalproject.model.builder.*;
 import com.epam.finalproject.model.entity.*;
 
 import java.sql.*;
@@ -27,12 +27,12 @@ public class UserDaoImpl implements UserDao {
     static User create(ResultSet resultSet) throws SQLException {
         String role = resultSet.getString(TableColumnName.ACCOUNT_ROLE);
         UserRole userRole = UserRole.valueOf(role);
-        UserCreator userBuilder = null;
+        UserBuilder userBuilder = null;
         if (userRole == UserRole.CLIENT) {
             double discount = resultSet.getDouble(TableColumnName.USER_DISCOUNT);
             double moneyBalance = resultSet.getDouble(TableColumnName.USER_MONEY_BALANCE);
             int boughtTrainings = resultSet.getInt(TableColumnName.USER_BOUGHT_TRAININGS);
-            userBuilder = ClientCreator.aClient()
+            userBuilder = ClientBuilder.aClient()
                     .withMoneyBalance(moneyBalance)
                     .withBoughtTrainings(boughtTrainings)
                     .withPersonalDiscount(discount);
@@ -41,13 +41,13 @@ public class UserDaoImpl implements UserDao {
             String institution = resultSet.getString(TableColumnName.USER_INSTITUTION);
             int graduationYear = resultSet.getInt(TableColumnName.USER_GRADUATION);
             String shortSummary = resultSet.getString(TableColumnName.USER_SHORT_SUMMARY);
-            userBuilder = TrainerCreator.aTrainer()
+            userBuilder = TrainerBuilder.aTrainer()
                     .withGraduationYear(graduationYear)
                     .withInstitution(institution)
                     .withRating(rating)
                     .withShortSummary(shortSummary);
         } else if (userRole == UserRole.ADMIN) {
-            userBuilder = AdminCreator.anAdmin();
+            userBuilder = AdminBuilder.anAdmin();
         }
         int id = resultSet.getInt(TableColumnName.ACCOUNT_ID);
         String login = resultSet.getString(TableColumnName.ACCOUNT_LOGIN);
@@ -60,7 +60,7 @@ public class UserDaoImpl implements UserDao {
         String lastName = resultSet.getString(TableColumnName.USER_LAST_NAME);
         String phone = resultSet.getString(TableColumnName.USER_PHONE);
         String imageName = resultSet.getString(TableColumnName.USER_IMAGE);
-        Account account = AccountCreator.anAccount()
+        Account account = AccountBuilder.anAccount()
                 .withId(id)
                 .withName(login)
                 .withEmail(email)
@@ -254,12 +254,12 @@ public class UserDaoImpl implements UserDao {
              ResultSet resultSet = statement.executeQuery()) {
             List<Trainer> trainers = new ArrayList<>();
             while (resultSet.next()) {
-                Account account = AccountCreator.anAccount()
+                Account account = AccountBuilder.anAccount()
                         .withId(resultSet.getInt(TableColumnName.ACCOUNT_ID))
                         .withEmail(resultSet.getString(TableColumnName.ACCOUNT_EMAIL))
                         .withRole(UserRole.TRAINER)
                         .build();
-                Trainer trainer = TrainerCreator.aTrainer()
+                Trainer trainer = TrainerBuilder.aTrainer()
                         .withAccount(account)
                         .withFirstName(resultSet.getString(TableColumnName.USER_FIRST_NAME))
                         .withLastName(resultSet.getString(TableColumnName.USER_LAST_NAME))
@@ -363,5 +363,4 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(e);
         }
     }
-
 }

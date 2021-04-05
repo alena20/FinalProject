@@ -1,13 +1,13 @@
-package com.epam.finalproject.model.creator;
+package com.epam.finalproject.model.builder;
 
 import com.epam.finalproject.model.entity.Account;
 import com.epam.finalproject.model.entity.User;
 
-public abstract class UserCreator<B extends UserCreator<B>> {
+public abstract class UserBuilder<B extends UserBuilder<B>> {
 
     protected User user;
 
-    protected UserCreator() {
+    protected UserBuilder() {
     }
 
     public B withAccount(Account account) {

@@ -19,11 +19,9 @@ public class TableColumnName {
     static final String USER_BOUGHT_TRAININGS = "bought_trainings";
     static final String USER_INSTITUTION = "institution";
     static final String USER_GRADUATION = "graduation";
-    static final String USER_INSTAGRAM = "instagram";
     static final String USER_SHORT_SUMMARY = "short_summary";
     static final String TRAINER_APPLICATION_INSTITUTION = "app_institution";
     static final String TRAINER_APPLICATION_GRADUATION_YEAR = "app_graduation";
-    static final String TRAINER_APPLICATION_INSTAGRAM_LINK = "app_instagram";
     static final String TRAINER_APPLICATION_APPLICATION_DATE = "application_date";
     static final String TRAINING_ID = "training_id";
     static final String TRAINER_ID = "trainer_id";

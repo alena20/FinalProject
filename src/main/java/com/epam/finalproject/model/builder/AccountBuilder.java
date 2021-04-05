@@ -1,4 +1,4 @@
-package com.epam.finalproject.model.creator;
+package com.epam.finalproject.model.builder;
 
 import com.epam.finalproject.model.entity.Account;
 import com.epam.finalproject.model.entity.AccountLocale;
@@ -6,48 +6,48 @@ import com.epam.finalproject.model.entity.UserRole;
 
 import java.sql.Date;
 
-public final class AccountCreator {
+public final class AccountBuilder {
     private final Account account;
 
-    private AccountCreator() {
+    private AccountBuilder() {
         account = new Account();
     }
 
-    public static AccountCreator anAccount() {
-        return new AccountCreator();
+    public static AccountBuilder anAccount() {
+        return new AccountBuilder();
     }
 
-    public AccountCreator withId(int id) {
+    public AccountBuilder withId(int id) {
         account.setId(id);
         return this;
     }
 
-    public AccountCreator withName(String login) {
+    public AccountBuilder withName(String login) {
         account.setLogin(login);
         return this;
     }
 
-    public AccountCreator withEmail(String email) {
+    public AccountBuilder withEmail(String email) {
         account.setEmail(email);
         return this;
     }
 
-    public AccountCreator withRole(UserRole role) {
+    public AccountBuilder withRole(UserRole role) {
         account.setRole(role);
         return this;
     }
 
-    public AccountCreator withRegistrationDate(Date registrationDate) {
+    public AccountBuilder withRegistrationDate(Date registrationDate) {
         account.setRegistrationDate(registrationDate);
         return this;
     }
 
-    public AccountCreator withIsActive(boolean isActive) {
+    public AccountBuilder withIsActive(boolean isActive) {
         account.setIsActive(isActive);
         return this;
     }
 
-    public AccountCreator withLocale(AccountLocale locale) {
+    public AccountBuilder withLocale(AccountLocale locale) {
         account.setLocale(locale);
         return this;
     }
